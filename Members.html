@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BO Company - Thành viên</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image:url("https://wallpapers.com/images/high/tech-background-fvwtt878xhbn6lh6.webp");
+      color: #cec4cb;
+    }
+    
+    .container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .member-card {
+      background-color: #63212107;
+      width: 300px;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .member-card h2 {
+      margin-top: 0;
+    }
+    
+    .member-card img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="member-card">
+      <img id="member-image" src="" alt="Thành viên">
+      <h2>Nick name</h2>
+      <p>ID: <span id="member-id"></span></p>
+      <p>Location: <span id="member-location"></span></p>
+      <p>Job: <span id="member-job"></span></p>
+      <p>Field of Activity: <span id="member-field"></span></p>
+    </div>
+  </div>
+
+  <script>
+    // Thông tin thành viên
+    const members = [
+      {
+        nickname: "BO Vodka",
+        id: "SE123",
+        location: "Việt Nam",
+        job: "Software",
+        field: "FPT University",
+        image: "https://scontent.fsgn19-1.fna.fbcdn.net/v/t39.30808-6/345277699_232726176036220_6846596853609902014_n.jpg?stp=cp6_dst-jpg&_nc_cat=104&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=81S5-Sszgt4AX_fuqnv&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfBk-0t2sTuENhNdrRDvvhtvGKzV979yso9x7TNp9sfbQw&oe=646C0844"
+      },
+      {
+        nickname: "BO Chianti",
+        id: "SE345",
+        location: "Việt Nam",
+        job: "Software",
+        field: "HCMUS",
+        image: "https://scontent.fsgn19-1.fna.fbcdn.net/v/t39.30808-6/338717794_525358083102628_335956165152998493_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=1JFR4y4y1fEAX_j1Mp8&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfCbxogAYRmOBQYk0u3YjdAXDi0l-e_g5V0zwXuiDzXojA&oe=646C3441"
+      },
+      {
+        nickname: "BO Korn",
+        id: "SE567",
+        location: "Việt Nam",
+        job: "Software",
+        field: "FPT University",
+        image: "https://scontent.fsgn19-1.fna.fbcdn.net/v/t39.30808-1/344405219_910752296703571_3497677709151507222_n.jpg?stp=cp6_dst-jpg_p200x200&_nc_cat=109&ccb=1-7&_nc_sid=7206a8&_nc_ohc=_NFE16bGfwAAX8i64qj&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfBsiicXuYYD7pwu3mFdB6GsJ8zqqPzdmhBzsuBoJt0p3A&oe=646C19FE"
+      },
+      {
+        nickname: "BO Rye",
+        id: "YH123",
+        location: "Việt Nam",
+        job: "Doctor",
+        field: "PNTU",
+        image: "https://scontent.fsgn19-1.fna.fbcdn.net/v/t1.6435-9/187855894_1684111625116856_3603148410732266709_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=174925&_nc_ohc=x8gnQv1MjQIAX_Nz__3&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfC1R9R5spPjFfj2D9X-aTLStlujdtbnmkZQB8ACF7aV1w&oe=648DB9A4"
+      },
+      {
+        nickname: "BO Vermouth",
+        id: "XD123",
+        location: "Việt Nam",
+        job: "Construction Engineer",
+        field: "HCMUTE",
+        image: "https://scontent.fsgn19-1.fna.fbcdn.net/v/t1.6435-9/162722272_1195200497605060_3334783652558188699_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=ljBag1ymxkoAX-MNvT6&_nc_ht=scontent.fsgn19-1.fna&oh=00_AfDq0cvjTAupJfw--2h8G1yLLAgms8-E_x9HgXHzKmnGeA&oe=648DBEB6"
+      }
+    ];
+
+    // Lấy tham số truyền vào URL để xác định thành viên hiển thị
+    const urlParams = new URLSearchParams(window.location.search);
+    let memberId = parseInt(urlParams.get('memberId')) || 0;
+
+    // Hiển thị thông tin thành viên hiện tại
+    function displayMember() {
+      const member = members[memberId];
+      const memberCard = document.querySelector(".member-card");
+
+      memberCard.style.opacity = 0;
+      memberCard.style.transform = "translateY(50px)";
+
+      setTimeout(function() {
+        document.getElementById("member-image").src = member.image;
+        document.getElementById("member-id").textContent = member.id;
+        document.getElementById("member-location").textContent = member.location;
+        document.getElementById("member-job").textContent = member.job;
+        document.getElementById("member-field").textContent = member.field;
+
+        document.querySelector(".member-card h2").textContent = member.nickname;
+
+        memberCard.style.opacity = 1;
+        memberCard.style.transform = "translateY(0)";
+      }, 500);
+    }
+
+    // Kiểm tra và xử lý sự kiện khi nhấn phím
+    document.addEventListener("keydown", function(event) {
+      if (event.keyCode === 32) { // Kiểm tra nếu phím nhấn là phím cách (key code 32)
+        memberId = (memberId + 1) % members.length; // Chuyển sang thành viên tiếp theo
+        displayMember(); // Hiển thị thông tin thành viên mới
+      }
+    });
+
+    // Hiển thị thành viên ban đầu
+    displayMember();
+  </script>
+</body>
+</html>
+
